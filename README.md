@@ -24,7 +24,9 @@ Each step drops AIC substantially until the interaction model, where AIC actuall
 
 ## Interactive dashboard
 
-Run the Streamlit dashboard locally:
+**[Live dashboard](https://us-election-county-swing.streamlit.app/)** (hosted on Streamlit Community Cloud)
+
+Or run locally:
 ```
 streamlit run app.py
 ```
