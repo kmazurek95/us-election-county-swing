@@ -1,0 +1,5 @@
+model,log_likelihood,aic,bic,n_fixed_effects
+m0_null,8618.31,-17230.61,-17212.49,1
+m1_random_intercept,9267.21,-18506.42,-18421.87,12
+m2_random_slope,9303.42,-18574.84,-18478.21,12
+m3_interaction,9303.98,-18571.96,-18463.24,14
