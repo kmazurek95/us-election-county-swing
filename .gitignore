@@ -181,3 +181,4 @@ cython_debug/
 .cursorindexingignore
 # Project-specific
 data/raw/
+.DS_Store

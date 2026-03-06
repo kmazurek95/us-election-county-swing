@@ -1,36 +1,44 @@
 # US Election County-Level Swing Analysis
 
-What county-level demographic and economic conditions predicted the 2020-to-2024 partisan swing? This project builds a multilevel model to answer that question, with a focus on whether the effect of educational composition depends on local economic context.
+About 31% of the variation in how much US counties swung toward Republicans in 2024 is explained by which state they sit in, not by county demographics. That means state-level forces (media markets, campaign spending, political environment) account for nearly a third of the swing story before you look at a single demographic variable.
+
+This project models the 2020-to-2024 county-level partisan swing across 3,101 counties in 49 states and DC, using multilevel models that decompose the swing into state-level and county-level components.
 
 ## Key findings
 
-Across 3,111 counties (excluding Alaska), the average county swung +1.7 percentage points toward Republicans in 2024 compared to 2020. But the variation is large, and the patterns are not uniform.
+The average county swung +1.7 percentage points toward Republicans, but the range runs from about 7 points left to 13 points right. Three patterns stand out.
 
-**About 31% of swing variance is between states, not between counties.** An empty multilevel model (no predictors, just state grouping) yields an ICC of 0.305. County demographics alone miss a third of the story. Whatever drove the swing operated partly at the state level.
+**State context explains a third of the variance.** An empty multilevel model (no predictors, just state grouping) yields an ICC of 0.305. Standard single-level regressions miss this entirely because they cannot separate state-level from county-level variation.
 
-**Education is the strongest demographic predictor, and its effect varies by state.** A 10-percentage-point higher college share predicts about 0.60 pp less Republican swing (p < 1e-23). Adding a random slope on education improves the model significantly (LR chi2 = 72.4, p < 1e-16). In some states the education gradient was steep; in others it was nearly flat.
+**Hispanic population share is the strongest predictor of rightward swing.** A 10-percentage-point higher Hispanic share predicts about 0.46 pp more Republican swing, holding education, income, density, prior partisanship, and urban-rural classification constant. This is statistically significant (p < 0.001) and consistent with the rightward shift among Latino voters documented in Pew and Catalist post-election studies. The pattern is driven by South Texas, the Florida I-4 corridor, and Southern California, but holds nationally. Important caveat: this is a county-level finding, not an individual-level one. We cannot say that individual Hispanic voters shifted right; we can say that places with more Hispanic residents swung further right.
 
-**Hispanic population share is the strongest positive predictor.** A 10-percentage-point higher Hispanic share predicts about 0.46 pp more Republican swing (p < 1e-71), consistent with the widely discussed Latino rightward shift.
-
-**The cross-level interaction is not significant.** State-level unemployment change (2020-2024) does not explain why the education effect varies across states (interaction p = 0.48). The variation exists, but its source remains an open question.
+**Education polarization is real but varies across states.** A 10-percentage-point higher college share predicts about 0.60 pp less Republican swing (p < 0.001). But the strength of this effect differs significantly across states: adding a random slope on education improves the model substantially (likelihood ratio test chi-squared = 72.4, p < 0.001). In some states the education gradient was steep; in others it was nearly flat. We tested whether state-level economic conditions (change in unemployment rate, 2020-2024) could explain that variation. They could not (interaction p = 0.48). The source of the cross-state variation remains an open question, likely involving media environment, campaign strategy, or state political culture.
 
 **Model progression (all fit with ML for comparison):**
-- Null model: AIC = -17,231
-- Random intercepts + demographics: AIC = -18,506
-- Random slope on education: AIC = -18,575
-- Cross-level interaction: AIC = -18,572
 
-Each step drops AIC substantially until the interaction model, where AIC actually ticks up (more parameters, no improvement in fit). The random slope model is the best fit: demographics matter, and the education effect is not uniform across states.
+| Model | AIC | What it adds |
+|-------|-----|-------------|
+| Null (state grouping only) | -17,231 | ICC = 0.305 |
+| Random intercepts + demographics | -18,506 | County-level predictors |
+| Random slope on education | -18,575 | Education effect varies by state |
+| Cross-level interaction | -18,572 | State economy x education (null) |
+
+AIC drops substantially at each step until the interaction model, where it ticks up slightly (more parameters, no improvement in fit). The random slope model is the best fit.
 
 ## Interactive dashboard
 
-**[Live dashboard](https://us-election-county-swing.streamlit.app/)** (hosted on Streamlit Community Cloud)
+**[Explore the findings interactively](https://us-election-county-swing-9ovbfe8vvncgikvc4ftgrz.streamlit.app/)** (hosted on Streamlit Community Cloud)
+
+Includes the caterpillar plot of state random intercepts, interaction plots, a county choropleth map, and an exploratory scatter tool.
 
 Or run locally:
 ```
 streamlit run app.py
 ```
-It loads pre-computed model outputs and includes the caterpillar plot of state random intercepts, the interaction plot, a county choropleth map, and an exploratory scatter tool.
+
+## Policy brief
+
+A two-page brief translating these findings for campaign strategists, advocacy organizations, and political researchers is available at [`docs/policy_brief.pdf`](docs/policy_brief.pdf).
 
 ## Data sources
 
@@ -41,6 +49,10 @@ It loads pre-computed model outputs and includes the caterpillar plot of state r
 - **Land area**: Census 2024 county gazetteer.
 
 ## Setup
+
+If you just want to explore the findings, skip setup and use the [live dashboard](https://us-election-county-swing-9ovbfe8vvncgikvc4ftgrz.streamlit.app/) above.
+
+To reproduce the analysis:
 
 1. Install dependencies:
    ```
@@ -71,11 +83,17 @@ data/processed/        Merged analysis-ready CSV + model outputs
 notebooks/             Numbered notebooks for each pipeline step
 src/                   Download and cleaning functions
 figures/               Output plots
+docs/                  Policy brief and build script
 scripts/               Build scripts for notebook generation
 ```
 
 ## Notes
 
-- Alaska is flagged but kept in the dataset. Its boroughs use a different reporting structure than standard counties, so most models should exclude it.
+- Alaska is flagged but kept in the dataset. Its boroughs use a different reporting structure than standard counties, so models exclude it.
 - Connecticut reorganized its counties in 2022. Some counties may not merge cleanly with the 2023 ACS data.
 - Virginia independent cities are county-equivalents with their own FIPS codes and work fine in the merge.
+- The ecological fallacy applies throughout: county demographic profiles predict county swing, but that does not mean the individuals matching those demographics drove the change. Survey data and voter-file analyses complement these findings at the individual level.
+
+## Author
+
+Built by Kaleb Mazurek. [GitHub](https://github.com/kmazurek95) | [LinkedIn](https://www.linkedin.com/in/kaleb-mazurek/)
