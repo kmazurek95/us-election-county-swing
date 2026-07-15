@@ -182,7 +182,7 @@ def key_findings_box(elements):
             "<bullet>&bull;</bullet>"
             "<b>Hispanic population share is the strongest predictor of rightward swing.</b> "
             "A 10-percentage-point higher Hispanic share predicts about 0.46 pp more "
-            "Republican swing (p &lt; 10<super>-71</super>), consistent with the rightward shift among Latino voters "
+            "Republican swing (p &lt; 0.001), consistent with the rightward shift among Latino voters "
             "documented in Pew and Catalist post-election studies.",
             style_bullet,
         ),
@@ -190,7 +190,7 @@ def key_findings_box(elements):
             "<bullet>&bull;</bullet>"
             "<b>Education polarization varies by state, but economic conditions don't explain why.</b> "
             "The education-swing gradient differs significantly across states "
-            "(LR test p &lt; 10<super>-16</super>), but state-level unemployment change "
+            "(LR test chi-squared = 72.4, p &lt; 0.001), but state-level unemployment change "
             "does not account for that variation (interaction p = 0.48). "
             "Other state-level factors, like media environment or campaign intensity, "
             "are likely drivers.",
@@ -292,7 +292,7 @@ def build_pdf():
     elements.append(Paragraph(
         "Hispanic population share is the single strongest predictor of rightward swing in "
         "the model. A 10-percentage-point increase in a county's Hispanic share is associated "
-        "with a 0.46 pp larger Republican swing (p &lt; 10<super>-71</super>), after "
+        "with a 0.46 pp larger Republican swing (p &lt; 0.001), after "
         "controlling for education, income, population density, prior partisanship, "
         "racial composition, and urban-rural classification. The pattern is driven heavily "
         "by South Texas, the Florida I-4 corridor, and Southern California, but it holds "
@@ -322,11 +322,11 @@ def build_pdf():
     ))
     elements.append(Paragraph(
         "A 10-percentage-point higher college-educated share predicts a 0.60 pp smaller "
-        "Republican swing (p &lt; 10<super>-23</super>). This confirms the now-familiar "
+        "Republican swing (p &lt; 0.001). This confirms the now-familiar "
         "education polarization story: more-educated places resisted the rightward shift. "
         "But the size of this effect varies significantly across states. Adding a random slope "
         "for education improves the model substantially (likelihood ratio test: "
-        "chi-squared = 72.4, p &lt; 10<super>-16</super>). In some states, the education "
+        "chi-squared = 72.4, p &lt; 0.001). In some states, the education "
         "gradient was steep; in others, it was nearly flat.",
         style_body,
     ))
